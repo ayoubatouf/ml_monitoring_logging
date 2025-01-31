@@ -1,0 +1,51 @@
+services:
+  fastapi:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - loki
+      - promtail
+      - prometheus
+    logging:
+      driver: "json-file" 
+
+  loki:
+    image: grafana/loki:2.8.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yml:/etc/loki/config.yml
+
+  promtail:
+    image: grafana/promtail:2.8.0
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers  
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"  
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin 
+    depends_on:
+      - loki
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana  
+      - ./grafana.ini:/etc/grafana/grafana.ini
+
+volumes:
+  grafana-data:

@@ -1,0 +1,8 @@
+server:
+  http_listen_port: 3100
+
+clients:
+  - url: http://localhost:3100/api/prom/push  
+
+positions:
+  filename: /tmp/positions.yaml
