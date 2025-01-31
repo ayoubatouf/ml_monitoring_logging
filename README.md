@@ -13,7 +13,6 @@ docker-compose up --build
 Then, to simulate request sending in a real environment, execute the bash script:
 ```
 ./simulate_requests.sh
-
 ```
 
 This will send requests to the FastAPI server to simulate model inference, while Prometheus scrapes metrics data as time series. At the same time, Loki collects logs. These data will be sent to Grafana at `localhost:3000` after establishing data sources and creating dashboards to facilitate interpretation.
